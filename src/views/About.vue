@@ -1,5 +1,5 @@
 <template>
-  <div>{{ message }}</div>
+  <div>ユーザーの確認</div>
 </template>
 
 <script>

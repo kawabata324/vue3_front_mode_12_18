@@ -27,7 +27,7 @@ export default defineComponent({
       axios
         .post(url, user)
         .then((response) => {
-          console.log(response.data);
+          console.log(response);
           user.email = "";
           user.password = "";
         })
