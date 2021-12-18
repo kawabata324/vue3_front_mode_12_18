@@ -28,6 +28,12 @@ export default defineComponent({
         .post(url, user)
         .then((response) => {
           console.log(response);
+          localStorage.setItem(
+            "access-token",
+            response.headers["access-token"]
+          );
+          localStorage.setItem("client", response.headers["client"]);
+          localStorage.setItem("uid", response.headers["uid"]);
           user.email = "";
           user.password = "";
         })
