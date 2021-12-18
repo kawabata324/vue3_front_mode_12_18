@@ -14,7 +14,7 @@ export default defineComponent({
     onMounted(() => {
       axios
         .get(Url)
-        .then((res) => (message.value = res.data.status))
+        .then((res) => (console.log(res.data)))
         .catch((e) => console.log(e));
     });
     return {
