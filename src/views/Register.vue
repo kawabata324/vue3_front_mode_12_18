@@ -14,10 +14,12 @@
 <script lang="ts">
 import { defineComponent, reactive } from "@vue/runtime-core";
 import axios from "axios";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   setup() {
     const url = "http://localhost:3013/v1/auth";
+    const router = useRouter();
 
     const user = reactive({
       email: "",
@@ -28,14 +30,7 @@ export default defineComponent({
         .post(url, user)
         .then((response) => {
           console.log(response);
-          localStorage.setItem(
-            "access-token",
-            response.headers["access-token"]
-          );
-          localStorage.setItem("client", response.headers["client"]);
-          localStorage.setItem("uid", response.headers["uid"]);
-          user.email = "";
-          user.password = "";
+          router.push("/");
         })
         .catch((error) => console.log(error));
     };
