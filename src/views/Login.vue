@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Login</h1>
+    <h1 class="text-red-500">Login</h1>
     <form @submit.prevent="userLogin">
       {{ errorMessage }}
       <label for="email">email</label>
