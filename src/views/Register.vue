@@ -79,12 +79,11 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from "@vue/runtime-core";
-import axios from "axios";
 import { useRouter } from "vue-router";
+import Client from "../auth/client"
 
 export default defineComponent({
   setup() {
-    const url = "http://localhost:3013/v1/auth";
     const router = useRouter();
 
     const user = reactive({
@@ -93,8 +92,8 @@ export default defineComponent({
       password: "",
     });
     const userRegister = () => {
-      axios
-        .post(url, user)
+      Client
+        .post("/v1/auth", user)
         .then((response) => {
           console.log(response);
           localStorage.setItem(

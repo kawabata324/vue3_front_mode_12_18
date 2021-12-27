@@ -62,14 +62,13 @@
 </template>
 
 <script lang="ts">
-import axios from "axios";
 import { defineComponent, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import Client from "../auth/client"
 
 export default defineComponent({
   setup() {
     const router = useRouter();
-    const url = "http://localhost:3013/v1/auth/sign_in";
 
     const user = reactive({
       email: "",
@@ -77,9 +76,9 @@ export default defineComponent({
     });
     const errorMessage = ref("");
 
-    const userLogin = () => {
-      axios
-        .post(url, user)
+    const userLogin = async () => {
+      await Client
+        .post("/v1/auth/sign_in", user)
         .then((response) => {
           console.log(response);
           localStorage.setItem(

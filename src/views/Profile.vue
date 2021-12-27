@@ -45,7 +45,7 @@
 
 <script>
 import { defineComponent, onMounted, reactive } from "@vue/runtime-core";
-import axios from "axios";
+import Client from "../auth/client";
 
 export default defineComponent({
   setup() {
@@ -54,19 +54,24 @@ export default defineComponent({
     const accessToken = localStorage.getItem("mp-access-token");
     const client = localStorage.getItem("mp-client");
     const expiry = localStorage.getItem("mp-expiry");
-    const tokenType = localStorage.getItem("mp-token-type")
+    const tokenType = localStorage.getItem("mp-token-type");
     const user = reactive({
       name: "",
       image: "default_user",
     });
 
     onMounted(async () => {
-      await axios
-        .get(Url, {
-          headers: { "uid": uid, "access-token": accessToken, "client": client, "expiry": expiry, "token-type": tokenType },
-        })
+      await Client.get("/users/show", {
+        headers: {
+          uid: uid,
+          "access-token": accessToken,
+          client: client,
+          expiry: expiry,
+          "token-type": tokenType,
+        },
+      })
         .then((res) => {
-          console.log(res)
+          console.log(res);
           user.name = res.data.user.name;
           if (res.data.user.image === null) {
             user.image = "default_user";
