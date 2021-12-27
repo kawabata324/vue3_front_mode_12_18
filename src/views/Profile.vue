@@ -15,13 +15,13 @@
       <div class="flex justify-center px-5 -mt-12">
         <img
           class="h-32 w-32 bg-white p-2 rounded-full"
-          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
+          :src="require(`../assets/${user.image}.png`)"
           alt=""
         />
       </div>
       <div class=" ">
         <div class="text-center px-14">
-          <h2 class="text-gray-800 text-3xl font-bold">{{ nameRef }}</h2>
+          <h2 class="text-gray-800 text-3xl font-bold">{{ user.name }}</h2>
           <p class="mt-2 text-gray-600">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
@@ -31,11 +31,11 @@
         <hr class="mt-6" />
         <div class="flex bg-gray-50">
           <div class="text-center w-1/2 p-4 hover:bg-gray-100 cursor-pointer">
-            <p><span class="font-semibold">2.5 k </span> Followers</p>
+            <p><span class="font-semibold">0.0 k </span> Followers</p>
           </div>
           <div class="border"></div>
           <div class="text-center w-1/2 p-4 hover:bg-gray-100 cursor-pointer">
-            <p><span class="font-semibold">2.0 k </span> Following</p>
+            <p><span class="font-semibold">0.0 k </span> Following</p>
           </div>
         </div>
       </div>
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, ref } from "@vue/runtime-core";
+import { defineComponent, onMounted, reactive } from "@vue/runtime-core";
 import axios from "axios";
 
 export default defineComponent({
@@ -53,22 +53,27 @@ export default defineComponent({
     const uid = localStorage.getItem("mp-uid");
     const accessToken = localStorage.getItem("mp-access-token");
     const client = localStorage.getItem("mp-client");
-    const nameRef = ref("");
+    const user = reactive({
+      name: "",
+      image: "default_user",
+    });
 
-    console.log(`${uid}, ${accessToken}, ${client}`);
     onMounted(async () => {
       await axios
         .get(Url, {
           headers: { uid: uid, accessToken: accessToken, client: client },
         })
         .then((res) => {
-          console.log(res.data);
-          nameRef.value = res.data.user.name;
+          user.name = res.data.user.name;
+          if (res.data.user.image === null) {
+            user.image = "default_user";
+          }
         })
         .catch((e) => console.log(e));
     });
+    console.log(user);
     return {
-      nameRef,
+      user,
     };
   },
 });
