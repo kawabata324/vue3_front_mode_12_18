@@ -88,6 +88,8 @@ export default defineComponent({
           );
           localStorage.setItem("mp-client", response.headers["client"]);
           localStorage.setItem("mp-uid", response.headers["uid"]);
+          localStorage.setItem("mp-expiry", response.headers["expiry"]);
+          localStorage.setItem("mp-token-type", response.headers["token-type"])
           router.push("/");
         })
         .catch(
