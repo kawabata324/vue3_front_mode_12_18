@@ -82,6 +82,12 @@ export default defineComponent({
         .post(url, user)
         .then((response) => {
           console.log(response);
+          localStorage.setItem(
+            "mp-access-token",
+            response.headers["access-token"]
+          );
+          localStorage.setItem("mp-client", response.headers["client"]);
+          localStorage.setItem("mp-uid", response.headers["uid"]);
           router.push("/");
         })
         .catch(
