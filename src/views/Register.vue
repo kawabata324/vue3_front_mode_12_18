@@ -73,6 +73,7 @@
           </div>
         </form>
       </div>
+      <router-link to="/login">ログインはこちら</router-link>
     </div>
   </div>
 </template>
@@ -80,7 +81,8 @@
 <script lang="ts">
 import { defineComponent, reactive } from "@vue/runtime-core";
 import { useRouter } from "vue-router";
-import Client from "../auth/client"
+import Client from "../auth/client";
+import { setAuthDataToLocalStorage } from "../utils/auth-data";
 
 export default defineComponent({
   setup() {
@@ -91,19 +93,11 @@ export default defineComponent({
       email: "",
       password: "",
     });
+
     const userRegister = () => {
-      Client
-        .post("/v1/auth", user)
+      Client.post("/v1/auth", user)
         .then((response) => {
-          console.log(response);
-          localStorage.setItem(
-            "mp-access-token",
-            response.headers["access-token"]
-          );
-          localStorage.setItem("mp-client", response.headers["client"]);
-          localStorage.setItem("mp-uid", response.headers["uid"]);
-          localStorage.setItem("mp-expiry", response.headers["expiry"]);
-          localStorage.setItem("mp-token-type", response.headers["token-type"])
+          setAuthDataToLocalStorage(response.headers);
           router.push("/");
         })
         .catch((error) => console.log(error));

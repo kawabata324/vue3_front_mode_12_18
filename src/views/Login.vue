@@ -57,6 +57,7 @@
           </div>
         </form>
       </div>
+        <router-link to="/register">新規登録はこちら</router-link>
     </div>
   </div>
 </template>
@@ -64,7 +65,10 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import Client from "../auth/client"
+import Client from "../auth/client";
+import { setAuthDataToLocalStorage } from "../utils/auth-data";
+import { AxiosResponse } from "axios";
+import { User } from "../types/user";
 
 export default defineComponent({
   setup() {
@@ -77,18 +81,9 @@ export default defineComponent({
     const errorMessage = ref("");
 
     const userLogin = async () => {
-      await Client
-        .post("/v1/auth/sign_in", user)
-        .then((response) => {
-          console.log(response);
-          localStorage.setItem(
-            "mp-access-token",
-            response.headers["access-token"]
-          );
-          localStorage.setItem("mp-client", response.headers["client"]);
-          localStorage.setItem("mp-uid", response.headers["uid"]);
-          localStorage.setItem("mp-expiry", response.headers["expiry"]);
-          localStorage.setItem("mp-token-type", response.headers["token-type"])
+      await Client.post("/v1/auth/sign_in", user)
+        .then((response: AxiosResponse<User>) => {
+          setAuthDataToLocalStorage(response.headers);
           router.push("/");
         })
         .catch(

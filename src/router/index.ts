@@ -11,7 +11,7 @@ const routes: Array<RouteRecordRaw> = [
     component: Home,
   },
   {
-    path: "/about",
+    path: "/profile",
     name: "Profile",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route

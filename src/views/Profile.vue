@@ -43,18 +43,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, onMounted, reactive } from "@vue/runtime-core";
 import Client from "../auth/client";
+import { getAuthDataFromLocalStorage } from "../utils/auth-data";
 
 export default defineComponent({
   setup() {
-    const Url = "http://localhost:3013/users/show";
-    const uid = localStorage.getItem("mp-uid");
-    const accessToken = localStorage.getItem("mp-access-token");
-    const client = localStorage.getItem("mp-client");
-    const expiry = localStorage.getItem("mp-expiry");
-    const tokenType = localStorage.getItem("mp-token-type");
     const user = reactive({
       name: "",
       image: "default_user",
@@ -62,13 +57,7 @@ export default defineComponent({
 
     onMounted(async () => {
       await Client.get("/users/show", {
-        headers: {
-          uid: uid,
-          "access-token": accessToken,
-          client: client,
-          expiry: expiry,
-          "token-type": tokenType,
-        },
+        headers: getAuthDataFromLocalStorage(),
       })
         .then((res) => {
           console.log(res);
