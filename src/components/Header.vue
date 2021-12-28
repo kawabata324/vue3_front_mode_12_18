@@ -2,7 +2,7 @@
   <div class="flex justify-between p-6">
     <div>
       <router-link to="/">
-        <img src="../assets/logo.png" class="h-14" alt="">
+        <img src="../assets/logo.png" class="h-14" alt="" />
       </router-link>
     </div>
     <div>
@@ -22,6 +22,7 @@
       >
         <router-link
           to="/profile"
+          @click="modalShow = false"
           class="transition-colors duration-200 block px-4 py-2 text-normal text-gray-900 rounded hover:bg-purple-500 hover:text-white"
           >Profile</router-link
         >
@@ -32,6 +33,13 @@
         >
           Logout
         </a>
+        <router-link
+          to="/login"
+          @click="modalShow = false"
+          class="transition-colors duration-200 block px-4 py-2 text-normal text-gray-900 rounded hover:bg-purple-500 hover:text-white"
+        >
+          Login
+        </router-link>
       </div>
     </div>
   </div>
@@ -39,16 +47,30 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "@vue/runtime-core";
+import { useRouter } from "vue-router";
+import Client from "../auth/client";
+import {
+  getAuthDataFromLocalStorage,
+  removeAuthDataFromLocalStorage,
+} from "../utils/auth-data";
 
 export default defineComponent({
   setup() {
-    const modalShow = ref(false)
-    const clickLogout = ()=>{
-      //Todo Logoutを実装
-      console.log('Logout')
-    }
+    const router = useRouter();
+    const modalShow = ref(false);
+
+    const clickLogout = async () => {
+      await Client.delete("/v1/auth/sign_out", {
+        headers: getAuthDataFromLocalStorage(),
+      }).then(() => {
+        removeAuthDataFromLocalStorage();
+        modalShow.value = false
+        router.push("/login");
+      });
+    };
     return {
-      modalShow
+      modalShow,
+      clickLogout,
     };
   },
 });

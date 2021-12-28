@@ -10,16 +10,18 @@ export const getAuthDataFromLocalStorage = (): AuthHeaders => {
   };
 };
 
-export const setAuthDataToLocalStorage = (authData: any):void =>{
-            localStorage.setItem(
-              "mp-access-token",
-              authData["access-token"]
-            );
-            localStorage.setItem("mp-client", authData["client"]);
-            localStorage.setItem("mp-uid", authData["uid"]);
-            localStorage.setItem("mp-expiry", authData["expiry"]);
-            localStorage.setItem(
-              "mp-token-type",
-              authData["token-type"]
-            );
-}
+export const setAuthDataToLocalStorage = (authData: any): void => {
+  localStorage.setItem("mp-access-token", authData["access-token"]);
+  localStorage.setItem("mp-client", authData["client"]);
+  localStorage.setItem("mp-uid", authData["uid"]);
+  localStorage.setItem("mp-expiry", authData["expiry"]);
+  localStorage.setItem("mp-token-type", authData["token-type"]);
+};
+
+export const removeAuthDataFromLocalStorage = (): void => {
+  localStorage.removeItem("mp-access-token");
+  localStorage.removeItem("mp-client");
+  localStorage.removeItem("mp-uid");
+  localStorage.removeItem("mp-expiry");
+  localStorage.removeItem("mp-token-type");
+};

@@ -47,9 +47,11 @@
 import { defineComponent, onMounted, reactive } from "@vue/runtime-core";
 import Client from "../auth/client";
 import { getAuthDataFromLocalStorage } from "../utils/auth-data";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   setup() {
+    const router = useRouter()
     const user = reactive({
       name: "",
       image: "default_user",
@@ -66,7 +68,10 @@ export default defineComponent({
             user.image = "default_user";
           }
         })
-        .catch((e) => console.log(e));
+        .catch((e) => {
+          console.log(e)
+          router.push('/login')
+          });
     });
     return {
       user,
