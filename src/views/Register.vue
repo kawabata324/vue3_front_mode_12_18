@@ -9,7 +9,23 @@
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
       <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
         <form class="space-y-6" @submit.prevent="userRegister">
-          {{ errorMessage }}
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">
+              Name
+            </label>
+            <div class="mt-1">
+              <input
+                id="name"
+                name="name"
+                type="name"
+                v-model="user.name"
+                autocomplete="name"
+                required="true"
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+          </div>
+
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700">
               Email address
@@ -57,29 +73,31 @@
           </div>
         </form>
       </div>
+      <router-link to="/login">ログインはこちら</router-link>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive } from "@vue/runtime-core";
-import axios from "axios";
 import { useRouter } from "vue-router";
+import Client from "../auth/client";
+import { setAuthDataToLocalStorage } from "../utils/auth-data";
 
 export default defineComponent({
   setup() {
-    const url = "http://localhost:3013/v1/auth";
     const router = useRouter();
 
     const user = reactive({
+      name: "",
       email: "",
       password: "",
     });
+
     const userRegister = () => {
-      axios
-        .post(url, user)
+      Client.post("/v1/auth", user)
         .then((response) => {
-          console.log(response);
+          setAuthDataToLocalStorage(response.headers);
           router.push("/");
         })
         .catch((error) => console.log(error));

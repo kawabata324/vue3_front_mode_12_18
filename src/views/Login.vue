@@ -57,19 +57,22 @@
           </div>
         </form>
       </div>
+        <router-link to="/register">新規登録はこちら</router-link>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import axios from "axios";
 import { defineComponent, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
+import Client from "../auth/client";
+import { setAuthDataToLocalStorage } from "../utils/auth-data";
+import { AxiosResponse } from "axios";
+import { User } from "../types/user";
 
 export default defineComponent({
   setup() {
     const router = useRouter();
-    const url = "http://localhost:3013/v1/auth/sign_in";
 
     const user = reactive({
       email: "",
@@ -77,11 +80,10 @@ export default defineComponent({
     });
     const errorMessage = ref("");
 
-    const userLogin = () => {
-      axios
-        .post(url, user)
-        .then((response) => {
-          console.log(response);
+    const userLogin = async () => {
+      await Client.post("/v1/auth/sign_in", user)
+        .then((response: AxiosResponse<User>) => {
+          setAuthDataToLocalStorage(response.headers);
           router.push("/");
         })
         .catch(
