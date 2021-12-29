@@ -92,6 +92,7 @@ export default defineComponent({
         headers: getAuthDataFromLocalStorage(),
       })
         .then((res) => {
+          console.log(res)
           user.name = res.data.user.name;
           if (res.data.user.image === null) {
             user.image = "default_user";
