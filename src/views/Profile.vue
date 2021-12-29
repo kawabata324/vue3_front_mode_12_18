@@ -21,9 +21,12 @@
       </div>
       <div class=" ">
         <div class="text-center px-14">
-          <div class="flex  items-center justify-center gap-2">
-            <h2 class="text-gray-800 text-3xl font-bold">{{ user.name }}</h2>
-            <font-awesome-icon :icon="penIcon" />
+          <div class="flex items-center justify-center gap-2">
+            <h2 class="text-gray-800 text-3xl font-bold" v-show="!editNameRef">
+              {{ user.name }}
+            </h2>
+            <input type="text" v-show="editNameRef" v-model="user.name" />
+            <font-awesome-icon :icon="penIcon" @click="editName" />
           </div>
           <p class="mt-2 text-gray-600">
             Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -47,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive } from "@vue/runtime-core";
+import { defineComponent, onMounted, reactive, ref } from "@vue/runtime-core";
 import Client from "../auth/client";
 import { getAuthDataFromLocalStorage } from "../utils/auth-data";
 import { useRouter } from "vue-router";
@@ -60,10 +63,26 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter();
+
     const user = reactive({
       name: "",
       image: "default_user",
     });
+
+    const editNameRef = ref(false);
+    const editName = async () => {
+      if (editNameRef.value === true) {
+        //ここで名前変更のAPIを叩く
+        await Client.post("/users/name", user.name)
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((e) => console.log(e));
+        editNameRef.value = false;
+      } else if (editNameRef.value === false) {
+        editNameRef.value = true;
+      }
+    };
     const penIcon = faPen;
 
     onMounted(async () => {
@@ -84,6 +103,8 @@ export default defineComponent({
     return {
       user,
       penIcon,
+      editNameRef,
+      editName,
     };
   },
 });
