@@ -21,7 +21,10 @@
       </div>
       <div class=" ">
         <div class="text-center px-14">
-          <h2 class="text-gray-800 text-3xl font-bold">{{ user.name }}</h2>
+          <div class="flex  items-center justify-center gap-2">
+            <h2 class="text-gray-800 text-3xl font-bold">{{ user.name }}</h2>
+            <font-awesome-icon :icon="penIcon" />
+          </div>
           <p class="mt-2 text-gray-600">
             Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
@@ -48,14 +51,20 @@ import { defineComponent, onMounted, reactive } from "@vue/runtime-core";
 import Client from "../auth/client";
 import { getAuthDataFromLocalStorage } from "../utils/auth-data";
 import { useRouter } from "vue-router";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
 
 export default defineComponent({
+  components: {
+    FontAwesomeIcon,
+  },
   setup() {
-    const router = useRouter()
+    const router = useRouter();
     const user = reactive({
       name: "",
       image: "default_user",
     });
+    const penIcon = faPen;
 
     onMounted(async () => {
       await Client.get("/users/show", {
@@ -68,12 +77,13 @@ export default defineComponent({
           }
         })
         .catch((e) => {
-          console.log(e)
-          router.push('/login')
-          });
+          console.log(e);
+          router.push("/login");
+        });
     });
     return {
       user,
+      penIcon,
     };
   },
 });
