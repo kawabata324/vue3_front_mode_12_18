@@ -73,11 +73,13 @@ export default defineComponent({
     const editName = async () => {
       if (editNameRef.value === true) {
         //ここで名前変更のAPIを叩く
-        await Client.post("/users/name", user.name)
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((e) => console.log(e));
+        await Client.post(
+          "/users/name",
+          { name: user.name },
+          {
+            headers: getAuthDataFromLocalStorage(),
+          }
+        )
         editNameRef.value = false;
       } else if (editNameRef.value === false) {
         editNameRef.value = true;
