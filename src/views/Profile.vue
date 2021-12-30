@@ -29,9 +29,11 @@
             <font-awesome-icon :icon="penIcon" @click="editName" />
           </div>
           <p class="mt-2 text-gray-600">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s,
+            <span v-show="!editSelfIntroductionRef">
+            {{ user.selfIntroduction }}
+            </span>
+            <textarea v-show="editSelfIntroductionRef" v-model="user.selfIntroduction"></textarea>
+            <font-awesome-icon :icon="penIcon" @click="editSelfIntroduction" />
           </p>
         </div>
         <hr class="mt-6" />
@@ -67,9 +69,14 @@ export default defineComponent({
     const user = reactive({
       name: "",
       image: "default_user",
+      selfIntroduction: `Lorem Ipsum is simply dummy text of the printing and typesetting
+            industry. Lorem Ipsum has been the industry's standard dummy text
+            ever since the 1500s,`
     });
 
     const editNameRef = ref(false);
+    const editSelfIntroductionRef = ref(false)
+
     const editName = async () => {
       if (editNameRef.value === true) {
         //ここで名前変更のAPIを叩く
@@ -85,6 +92,22 @@ export default defineComponent({
         editNameRef.value = true;
       }
     };
+    const editSelfIntroduction = async () => {
+      if (editSelfIntroductionRef.value === true) {
+        //ここで自己紹介文の変更のAPIを叩く
+        await Client.post(
+          "/users/name",
+          { name: user.name },
+          {
+            headers: getAuthDataFromLocalStorage(),
+          }
+        )
+        editSelfIntroductionRef.value = false;
+      } else if (editSelfIntroductionRef.value === false) {
+        editSelfIntroductionRef.value = true;
+      }
+    };
+
     const penIcon = faPen;
 
     onMounted(async () => {
@@ -108,6 +131,8 @@ export default defineComponent({
       penIcon,
       editNameRef,
       editName,
+      editSelfIntroduction,
+      editSelfIntroductionRef,
     };
   },
 });
