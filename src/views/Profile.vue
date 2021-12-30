@@ -32,7 +32,7 @@
             <span v-show="!editSelfIntroductionRef">
             {{ user.selfIntroduction }}
             </span>
-            <textarea v-show="editSelfIntroductionRef" v-model="user.selfIntroduction"></textarea>
+            <textarea v-show="editSelfIntroductionRef" v-model="user.selfIntroduction" rows="10" cols="50"></textarea>
             <font-awesome-icon :icon="penIcon" @click="editSelfIntroduction" />
           </p>
         </div>
