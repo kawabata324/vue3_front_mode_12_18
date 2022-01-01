@@ -32,7 +32,6 @@ export default defineComponent({
           users.push(element);
         })
       );
-      console.log(users);
     });
     return {
       users,

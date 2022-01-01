@@ -30,9 +30,14 @@
           </div>
           <p class="mt-2 text-gray-600">
             <span v-show="!editSelfIntroductionRef">
-            {{ user.selfIntroduction }}
+              {{ user.selfIntroduction }}
             </span>
-            <textarea v-show="editSelfIntroductionRef" v-model="user.selfIntroduction" rows="10" cols="50"></textarea>
+            <textarea
+              v-show="editSelfIntroductionRef"
+              v-model="user.selfIntroduction"
+              rows="10"
+              cols="50"
+            ></textarea>
             <font-awesome-icon :icon="penIcon" @click="editSelfIntroduction" />
           </p>
         </div>
@@ -69,24 +74,21 @@ export default defineComponent({
     const user = reactive({
       name: "",
       image: "default_user",
-      selfIntroduction: `Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s,`
+      selfIntroduction: "",
     });
 
     const editNameRef = ref(false);
-    const editSelfIntroductionRef = ref(false)
+    const editSelfIntroductionRef = ref(false);
 
     const editName = async () => {
       if (editNameRef.value === true) {
-        //ここで名前変更のAPIを叩く
         await Client.post(
           "/users/name",
           { name: user.name },
           {
             headers: getAuthDataFromLocalStorage(),
           }
-        )
+        );
         editNameRef.value = false;
       } else if (editNameRef.value === false) {
         editNameRef.value = true;
@@ -94,14 +96,13 @@ export default defineComponent({
     };
     const editSelfIntroduction = async () => {
       if (editSelfIntroductionRef.value === true) {
-        //ここで自己紹介文の変更のAPIを叩く
         await Client.post(
-          "/users/name",
-          { name: user.name },
+          "/users/selfIntroduction",
+          { selfIntroduction: user.selfIntroduction },
           {
             headers: getAuthDataFromLocalStorage(),
           }
-        )
+        );
         editSelfIntroductionRef.value = false;
       } else if (editSelfIntroductionRef.value === false) {
         editSelfIntroductionRef.value = true;
@@ -115,8 +116,11 @@ export default defineComponent({
         headers: getAuthDataFromLocalStorage(),
       })
         .then((res) => {
-          console.log(res)
           user.name = res.data.user.name;
+          user.selfIntroduction = res.data.user.selfIntroduction;
+          if (res.data.user.selfIntroduction === null) {
+            user.selfIntroduction = "This is a sample text message.";
+          }
           if (res.data.user.image === null) {
             user.image = "default_user";
           }
